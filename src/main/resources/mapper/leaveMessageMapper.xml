@@ -1,0 +1,110 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+private Integer id;
+	private String name;
+	private String content;
+	private Date createDate;
+	private Date updateDate;
+	private String creator;
+	private String remark;
+ -->
+<mapper namespace="leaveMessageMapper">
+	<resultMap type="com.domoment.leaves.vo.LeaveMessageVO" id="leaveMsg">
+		<id column="id" property="id"/>
+		<result column="leave_name" property="leaveName"/>
+		<result column="content" property="content"/>
+		<result column="description" property="description"/>
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="creator" property="creator"/>
+		<result column="remark" property="remark"/>
+	</resultMap>
+
+	<select id="selectList" resultMap="leaveMsg">
+		select
+		description,
+		leave_name,
+		content,
+		create_time,
+		update_time,
+		creator,remark from leave_message
+		<where>
+				valid = 1 AND public = #{_public}
+		    <if test="certificate != null and certificate != ''">
+		        AND certificate = #{certificate}
+		    </if>
+	   </where>
+		order by create_time DESC
+	</select>
+	<select id="selectListCount" resultType="int">
+		select count(1) from leave_message
+		<where>
+				valid = 1 AND public = #{_public}
+		    <if test="certificate != null and certificate != ''">
+		        AND certificate = #{certificate}
+		    </if>
+	  </where>
+	</select>
+	
+	<insert id="insert" parameterType="com.domoment.leaves.vo.LeaveMessageVO">
+	    INSERT INTO leave_message 
+			(`title`,
+			`description`,
+			`content`,
+			`to_whom`,
+			`reserved_information`,
+			`leave_name`, 
+			`category`,
+			`parent_id`, 
+			`attachment`, 
+			`public`, 
+			`certificate`, 
+			`creator`, 
+			`creator_id`, 
+			`updater`, 
+			`updater_id`, 
+			`version`, 
+			`transaction_id`, 
+			`valid`, 
+			`remark`) 
+	       VALUES (
+	       	#{title},
+	        #{description}, 
+	        #{content}, 
+	        #{toWhom}, 
+	        #{reservedInformation}, 
+	        #{leaveName}, 
+	        #{category}, 
+	        #{parentId}, 
+	        #{attachment}, 
+	        #{_public}, 
+	        #{certificate}, 
+	        #{creator}, 
+	        #{creatorId}, 
+	        #{updater}, 
+	        #{updaterId}, 
+	        #{version}, 
+	        #{transactionId}, 
+	        #{valid},
+	        #{remark})
+
+	</insert>
+
+	<!-- <resultMap type="org.apache.ibatis.submitted.rounding.User" id="usermap2">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="funkyNumber" property="funkyNumber"/>
+		<result column="roundingMode" property="roundingMode" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+	</resultMap>
+	<select id="getUser2" resultMap="usermap2">
+		select * from users2
+	</select>
+	<insert id="insert2">
+	    insert into users2 (id, name, funkyNumber, roundingMode) values (
+	    	#{id}, #{name}, #{funkyNumber}, #{roundingMode, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+	    )
+	</insert> -->
+
+</mapper>
